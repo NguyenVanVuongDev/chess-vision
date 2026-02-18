@@ -74,7 +74,7 @@ class OverlayWindow(tk.Toplevel):
 class ChessAssistApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Chess AI Visualizer Pro (Interactive)")
+        self.root.title("Chess Vision")
         self.root.geometry("520x700")
         self.root.attributes('-topmost', True)
         self.root.configure(bg=COLORS["bg_main"])
@@ -122,7 +122,7 @@ class ChessAssistApp:
         # --- Header ---
         header_frame = tk.Frame(parent, bg="#111", pady=10)
         header_frame.pack(fill='x')
-        tk.Label(header_frame, text="CHESS AI MASTER", font=FONTS["header"], bg="#111", fg=COLORS["text_accent"]).pack()
+        tk.Label(header_frame, text="CHESS VISION", font=FONTS["header"], bg="#111", fg=COLORS["text_accent"]).pack()
 
         # --- Evaluation Bar ---
         self.frame_eval = tk.Frame(parent, bg=COLORS["bg_frame"], pady=10, padx=10)
@@ -130,6 +130,7 @@ class ChessAssistApp:
         
         self.lbl_eval_score = tk.Label(self.frame_eval, text="+0.00", font=FONTS["score"], bg=COLORS["bg_frame"], fg=COLORS["text_main"])
         self.lbl_eval_score.pack(side='top', pady=(0, 5))
+        
         
         self.canvas_bar = tk.Canvas(self.frame_eval, height=15, bg="#444", highlightthickness=0)
         self.canvas_bar.pack(fill='x', expand=True)
