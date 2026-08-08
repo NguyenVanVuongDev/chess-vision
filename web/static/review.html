@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chess Vision · Đánh giá ván đấu</title>
+  <link rel="stylesheet" href="/static/style.css?v=20260808-4">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">GAME REVIEW</p>
+        <h1>Đánh giá ván đấu</h1>
+      </div>
+      <nav class="site-nav">
+        <a href="/">Quét màn hình</a>
+        <a href="/opening">Luyện khai cuộc</a>
+        <a href="/review" class="active">Đánh giá ván đấu</a>
+      </nav>
+      <span id="status" class="status">Sẵn sàng</span>
+    </header>
+
+    <section class="review-input control-section">
+      <div class="section-title"><span class="step">01</span><h2>Dán PGN của ván đấu</h2></div>
+      <textarea id="pgn-input" rows="6" placeholder="1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 ..."></textarea>
+      <div class="button-row">
+        <button id="analyze-btn" class="primary">Phân tích ván đấu</button>
+        <button id="clear-btn" class="secondary">Xoá</button>
+      </div>
+      <p class="muted">Việc phân tích chạy Stockfish cho từng nước nên có thể mất khoảng vài chục giây với ván dài.</p>
+    </section>
+
+    <section class="workspace review-workspace" id="review-results" hidden>
+      <div class="board-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">POSITION</p>
+            <h2 id="review-move-label">Vị trí ban đầu</h2>
+          </div>
+          <button id="flip-board" class="icon-button" title="Đổi hướng bàn cờ">↻</button>
+        </div>
+        <div class="board-wrap">
+          <div id="board" class="board" aria-label="Bàn cờ"></div>
+          <svg id="board-arrows" class="board-arrows" viewBox="0 0 8 8" preserveAspectRatio="none" aria-hidden="true"></svg>
+        </div>
+        <div class="board-footer">
+          <span id="fen-label">—</span>
+        </div>
+        <svg id="eval-graph" class="eval-graph" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"></svg>
+      </div>
+
+      <aside class="controls">
+        <section class="analysis-card summary-card">
+          <div class="summary-row">
+            <div class="summary-side">
+              <span>Trắng</span>
+              <strong id="white-accuracy">—</strong>
+            </div>
+            <div class="summary-side">
+              <span>Đen</span>
+              <strong id="black-accuracy">—</strong>
+            </div>
+          </div>
+          <div id="summary-counts" class="summary-counts"></div>
+        </section>
+
+        <section class="control-section move-list-section">
+          <div class="section-title"><span class="step">02</span><h2>Danh sách nước đi</h2></div>
+          <div id="move-list" class="move-list"></div>
+        </section>
+      </aside>
+    </section>
+
+    <p id="message" class="message">Dán PGN rồi bấm Phân tích ván đấu để bắt đầu.</p>
+  </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+  <script src="/static/board-ui.js?v=20260808-4"></script>
+  <script src="/static/review.js?v=20260808-4"></script>
+</body>
+</html>

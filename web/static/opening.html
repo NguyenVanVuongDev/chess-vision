@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chess Vision · Luyện khai cuộc</title>
+  <link rel="stylesheet" href="/static/style.css?v=20260808-4">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">OPENING TRAINER</p>
+        <h1>Luyện khai cuộc</h1>
+      </div>
+      <nav class="site-nav">
+        <a href="/">Quét màn hình</a>
+        <a href="/opening" class="active">Luyện khai cuộc</a>
+        <a href="/review">Đánh giá ván đấu</a>
+      </nav>
+      <span id="status" class="status">Sẵn sàng</span>
+    </header>
+
+    <section class="workspace">
+      <div class="board-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow"><span id="opening-eco">—</span></p>
+            <h2 id="opening-name">Chọn một khai cuộc</h2>
+          </div>
+          <button id="flip-board" class="icon-button" title="Đổi hướng bàn cờ">↻</button>
+        </div>
+        <div class="board-wrap">
+          <div id="board" class="board" aria-label="Bàn cờ"></div>
+          <svg id="board-arrows" class="board-arrows" viewBox="0 0 8 8" preserveAspectRatio="none" aria-hidden="true"></svg>
+        </div>
+        <div class="board-footer">
+          <span id="fen-label">Vị trí ban đầu</span>
+          <a id="lichess-link" href="https://lichess.org/analysis/standard" target="_blank" rel="noreferrer">Mở Lichess ↗</a>
+        </div>
+      </div>
+
+      <aside class="controls">
+        <section class="control-section">
+          <div class="section-title"><span class="step">01</span><h2>Chọn khai cuộc</h2></div>
+          <div class="field-row">
+            <label for="opening-select">Khai cuộc</label>
+            <select id="opening-select"></select>
+          </div>
+          <div class="field-row">
+            <label for="side-select">Cầm quân</label>
+            <select id="side-select"><option value="w">Trắng</option><option value="b">Đen</option></select>
+          </div>
+          <div class="button-row">
+            <button id="start-btn" class="primary">Bắt đầu</button>
+            <button id="reset-btn" class="secondary">Chơi lại</button>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <div class="section-title"><span class="step">02</span><h2>Trong ván</h2></div>
+          <div class="button-row">
+            <button id="undo-btn" class="secondary">Đi lại</button>
+            <button id="hint-btn" class="secondary">Gợi ý</button>
+          </div>
+          <div class="button-row">
+            <button id="reveal-btn" class="secondary">Xem nước sách</button>
+          </div>
+          <p id="book-line" class="muted book-line"></p>
+        </section>
+
+        <section class="analysis-card">
+          <div class="eval-head"><span>Đánh giá</span><strong id="evaluation">+0.00</strong></div>
+          <div class="eval-track"><div id="evaluation-fill" class="eval-fill"></div></div>
+          <div class="move-line"><span>Nước tốt nhất</span><strong id="best-move">—</strong></div>
+        </section>
+      </aside>
+    </section>
+
+    <p id="message" class="message">Chọn một khai cuộc và phe cầm quân, rồi bấm Bắt đầu.</p>
+  </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+  <script src="/static/board-ui.js?v=20260808-4"></script>
+  <script src="/static/opening.js?v=20260808-4"></script>
+</body>
+</html>

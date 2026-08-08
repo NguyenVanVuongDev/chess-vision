@@ -50,6 +50,23 @@ PIECES_UNICODE = {
     'k': '♚', 'q': '♛', 'r': '♜', 'b': '♝', 'n': '♞', 'p': '♟'
 }
 
+# Ánh xạ từ ký tự cờ vua sang tên file (không bao gồm phần mở rộng)
+# Dựa trên danh sách file của bạn: Chess_klt45.svg, Chess_kdt45.svg, ...
+PIECE_FILE_MAP = {
+    'K': 'Chess_klt45',   # Vua trắng
+    'k': 'Chess_kdt45',   # Vua đen
+    'Q': 'Chess_qlt45',   # Hậu trắng
+    'q': 'Chess_qdt45',   # Hậu đen
+    'R': 'Chess_rlt45',   # Xe trắng
+    'r': 'Chess_rdt45',   # Xe đen
+    'B': 'Chess_blt45',   # Tượng trắng
+    'b': 'Chess_bdt45',   # Tượng đen
+    'N': 'Chess_nlt45',   # Mã trắng
+    'n': 'Chess_ndt45',   # Mã đen
+    'P': 'Chess_plt45',   # Tốt trắng
+    'p': 'Chess_pdt45'    # Tốt đen
+}
+
 class OverlayWindow(tk.Toplevel):
     def __init__(self, master, w=500, h=500):
         super().__init__(master)
@@ -91,6 +108,10 @@ class ChessAssistApp:
         self.selected_square = None
         self.best_move_uci = None
         
+        # --- Piece Image Cache ---
+        self.piece_images = {}   # cache ảnh đã resize
+        self.piece_size = 0      # sẽ cập nhật sau
+
         # --- Initialization ---
         self.init_engine()
         self.setup_scrollable_area()
@@ -287,6 +308,74 @@ class ChessAssistApp:
                         self.selected_square = None
                         self.redraw_board()
 
+    # --- PIECE IMAGE LOADING ---
+    def load_piece_image(self, piece_symbol):
+        """Trả về PhotoImage của quân cờ, sử dụng cache.
+           Ưu tiên PNG, nếu không có thì thử SVG (cần cairosvg).
+           Nếu không có ảnh, trả về None để fallback dùng Unicode."""
+        # Kiểm tra cache
+        if piece_symbol in self.piece_images:
+            return self.piece_images[piece_symbol]
+
+        # Xác định tên file cơ bản từ map
+        base_name = PIECE_FILE_MAP.get(piece_symbol)
+        if not base_name:
+            return None
+
+        # Các thư mục có thể chứa ảnh
+        search_dirs = [
+            os.path.join(BASE_DIR, "pieces"),
+            BASE_DIR
+        ]
+
+        # Thử tìm file PNG trước
+        for ext in ['.png', '.PNG']:
+            for dir_path in search_dirs:
+                fname = base_name + ext
+                filepath = os.path.join(dir_path, fname)
+                if os.path.exists(filepath):
+                    try:
+                        from PIL import Image, ImageTk
+                        img = Image.open(filepath)
+                        size = int(self.sq_size * 0.85)
+                        img = img.resize((size, size), Image.Resampling.LANCZOS)
+                        photo = ImageTk.PhotoImage(img)
+                        self.piece_images[piece_symbol] = photo
+                        return photo
+                    except Exception as e:
+                        print(f"Lỗi tải PNG {filepath}: {e}")
+                        continue
+
+        # Nếu không có PNG, thử SVG (cần cairosvg)
+        for ext in ['.svg', '.SVG']:
+            for dir_path in search_dirs:
+                fname = base_name + ext
+                filepath = os.path.join(dir_path, fname)
+                if os.path.exists(filepath):
+                    try:
+                        # Import cairosvg bên trong để tránh lỗi nếu chưa cài
+                        import cairosvg
+                        import io
+                        from PIL import Image, ImageTk
+
+                        # Chuyển SVG sang PNG trong bộ nhớ
+                        png_data = cairosvg.svg2png(url=filepath)
+                        img = Image.open(io.BytesIO(png_data))
+                        size = int(self.sq_size * 0.85)
+                        img = img.resize((size, size), Image.Resampling.LANCZOS)
+                        photo = ImageTk.PhotoImage(img)
+                        self.piece_images[piece_symbol] = photo
+                        return photo
+                    except ImportError:
+                        print("cairosvg không được cài đặt, bỏ qua SVG")
+                        break  # không thử SVG nữa nếu thiếu thư viện
+                    except Exception as e:
+                        print(f"Lỗi tải SVG {filepath}: {e}")
+                        continue
+
+        # Không tìm thấy ảnh
+        return None
+
     # --- LOGIC: VISUALIZATION ---
     def redraw_board(self):
         self.canvas_board.delete("all")
@@ -319,7 +408,7 @@ class ChessAssistApp:
                 self.canvas_board.create_line(c1[0], c1[1], c2[0], c2[1], fill="#FF3D00", width=4, arrow=tk.LAST)
              except ValueError: pass
 
-        # 4. Draw Pieces
+        # 4. Draw Pieces (using images if available)
         for square, piece in self.board_logic.piece_map().items():
             f, r = chess.square_file(square), chess.square_rank(square)
             
@@ -333,11 +422,16 @@ class ChessAssistApp:
             x = draw_c * self.sq_size + self.sq_size/2
             y = draw_r * self.sq_size + self.sq_size/2
             
-            symbol = PIECES_UNICODE[piece.symbol()]
-            p_fill = "white" if piece.color == chess.WHITE else "black"
-            
-            self.canvas_board.create_text(x+1, y+1, text=symbol, font=FONTS["symbol"], fill="#555")
-            self.canvas_board.create_text(x, y, text=symbol, font=FONTS["symbol"], fill=p_fill)
+            symbol = piece.symbol()
+            photo = self.load_piece_image(symbol)
+            if photo:
+                self.canvas_board.create_image(x, y, image=photo, anchor=tk.CENTER)
+            else:
+                # Fallback: vẽ ký tự Unicode
+                unicode_symbol = PIECES_UNICODE[symbol]
+                p_fill = "white" if piece.color == chess.WHITE else "black"
+                self.canvas_board.create_text(x+1, y+1, text=unicode_symbol, font=FONTS["symbol"], fill="#555")
+                self.canvas_board.create_text(x, y, text=unicode_symbol, font=FONTS["symbol"], fill=p_fill)
 
         # 5. Draw Coordinates
         files = "abcdefgh"[::-1] if is_black_view else "abcdefgh"

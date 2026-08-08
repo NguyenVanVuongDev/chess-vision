@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chess Vision</title>
+  <link rel="stylesheet" href="/static/style.css?v=20260808-4">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">SCREEN ANALYSIS</p>
+        <h1>Chess Vision</h1>
+      </div>
+      <nav class="site-nav">
+        <a href="/" class="active">Quét màn hình</a>
+        <a href="/opening">Luyện khai cuộc</a>
+        <a href="/review">Đánh giá ván đấu</a>
+      </nav>
+      <span id="status" class="status">Sẵn sàng</span>
+    </header>
+
+    <section class="workspace">
+      <div class="board-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">POSITION</p>
+            <h2>Bàn cờ phân tích</h2>
+          </div>
+          <button id="flip-board" class="icon-button" title="Đổi hướng bàn cờ">↻</button>
+        </div>
+        <div class="board-wrap">
+          <div id="board" class="board" aria-label="Bàn cờ"></div>
+          <svg id="board-arrows" class="board-arrows" viewBox="0 0 8 8" preserveAspectRatio="none" aria-hidden="true"></svg>
+        </div>
+        <div class="board-footer">
+          <span id="fen-label">Vị trí ban đầu</span>
+          <a id="lichess-link" href="https://lichess.org/analysis/standard" target="_blank" rel="noreferrer">Mở Lichess ↗</a>
+        </div>
+      </div>
+
+      <aside class="controls">
+        <section class="control-section capture-section">
+          <div class="section-title"><span class="step">01</span><h2>Chia sẻ màn hình</h2></div>
+          <p class="muted">Chọn cửa sổ đang chứa bàn cờ. Trình duyệt chỉ cấp quyền sau khi bạn bấm nút.</p>
+          <video id="screen-preview" autoplay muted playsinline></video>
+          <div class="button-row">
+            <button id="share-screen" class="primary">Chia sẻ màn hình</button>
+            <button id="stop-sharing" class="secondary" disabled>Dừng</button>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <div class="section-title"><span class="step">02</span><h2>Quét và phân tích</h2></div>
+          <div class="field-row">
+            <label for="turn">Phe đang đi</label>
+            <select id="turn"><option value="w">Trắng</option><option value="b">Đen</option></select>
+          </div>
+          <label class="toggle-row"><input id="use-engine" type="checkbox" checked><span>Bật Stockfish</span></label>
+          <div class="button-row">
+            <button id="scan-now" class="primary" disabled>Quét màn hình</button>
+            <button id="auto-scan" class="secondary" disabled>Tự động: Tắt</button>
+          </div>
+          <div class="field-row delay-row"><label for="delay">Chu kỳ</label><input id="delay" type="number" min="1" max="30" value="2"><span class="muted">giây</span></div>
+        </section>
+
+        <section class="analysis-card">
+          <div class="eval-head"><span>Đánh giá</span><strong id="evaluation">+0.00</strong></div>
+          <div class="eval-track"><div id="evaluation-fill" class="eval-fill"></div></div>
+          <div class="move-line"><span>Nước tốt nhất</span><strong id="best-move">—</strong></div>
+        </section>
+      </aside>
+    </section>
+
+    <p id="message" class="message">Hãy chia sẻ một cửa sổ có bàn cờ để bắt đầu.</p>
+  </main>
+  <canvas id="capture-canvas" hidden></canvas>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+  <script src="/static/board-ui.js?v=20260808-4"></script>
+  <script src="/static/app.js?v=20260808-4"></script>
+</body>
+</html>
