@@ -48,7 +48,8 @@ function sleep(ms) {
 
 async function loadOpenings() {
   try {
-    const response = await fetch("/api/openings");
+    const apiBase = (window.CHESS_VISION_API_BASE || "").replace(/\/$/, "");
+    const response = await fetch(`${apiBase}/api/openings`);
     const result = await response.json();
     if (!result.success) throw new Error("Không tải được danh sách khai cuộc");
     openings = result.openings;
@@ -110,7 +111,8 @@ function updateBookLine() {
 }
 
 async function fetchEval(fen) {
-  const response = await fetch("/api/analyze-fen", {
+  const apiBase = (window.CHESS_VISION_API_BASE || "").replace(/\/$/, "");
+  const response = await fetch(`${apiBase}/api/analyze-fen`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ fen, use_engine: true }),

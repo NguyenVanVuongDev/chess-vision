@@ -8,6 +8,7 @@ import chess
 import cv2
 import numpy as np
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -27,6 +28,13 @@ MODEL_FILE = ROOT_DIR / "chess_model_best.pth"
 STOCKFISH_FILE = ROOT_DIR / "stockfish.exe"
 
 app = FastAPI(title="Chess Vision Web")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.mount("/pieces", StaticFiles(directory=ROOT_DIR / "pieces"), name="pieces")
 

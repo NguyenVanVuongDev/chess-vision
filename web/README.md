@@ -1,5 +1,18 @@
 # Chess Vision Web
 
+## Deploy Vercel
+
+Vercel chi phuc vu giao dien tinh. Backend FastAPI can chay tren Render, Railway
+hoac mot may chu Python khac vi PyTorch va Stockfish vuot gioi han Serverless
+Function cua Vercel.
+
+Sau khi co URL backend, thay gia tri `window.CHESS_VISION_API_BASE` trong
+`web/static/index.html`, `opening.html` va `review.html` bang URL do, vi du:
+
+```html
+<script>window.CHESS_VISION_API_BASE = "https://your-backend.example.com";</script>
+```
+
 Ban web thay cho giao dien Tkinter. Trinh duyet se chia se cua so/man hinh bang `getDisplayMedia()`, sau do gui frame ve FastAPI de OpenCV va PyTorch nhan dien ban co.
 
 ## Cai dat

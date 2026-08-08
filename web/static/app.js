@@ -16,6 +16,7 @@ const evaluationFill = document.querySelector("#evaluation-fill");
 const bestMoveElement = document.querySelector("#best-move");
 const fenLabel = document.querySelector("#fen-label");
 const lichessLink = document.querySelector("#lichess-link");
+const API_BASE = (window.CHESS_VISION_API_BASE || "").replace(/\/$/, "");
 
 let stream = null;
 let autoTimer = null;
@@ -98,7 +99,7 @@ async function captureAndAnalyze() {
   form.append("use_engine", String(useEngine.checked));
 
   try {
-    const response = await fetch("/api/analyze", { method: "POST", body: form });
+    const response = await fetch(`${API_BASE}/api/analyze`, { method: "POST", body: form });
     const result = await response.json();
     if (!response.ok) throw new Error(result.detail || "API lỗi");
     if (!result.success) {
@@ -150,7 +151,7 @@ function toggleAutoScan() {
 
 async function analyzeCurrentPosition() {
   try {
-    const response = await fetch("/api/analyze-fen", {
+    const response = await fetch(`${API_BASE}/api/analyze-fen`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ fen: board.fen(), use_engine: useEngine.checked })
