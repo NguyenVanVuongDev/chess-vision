@@ -1,9 +1,0 @@
-{
-  "version": 2,
-  "rewrites": [
-    { "source": "/static/:path*", "destination": "/web/static/:path*" },
-    { "source": "/opening", "destination": "/web/static/opening.html" },
-    { "source": "/review", "destination": "/web/static/review.html" },
-    { "source": "/", "destination": "/web/static/index.html" }
-  ]
-}
