@@ -1,0 +1,17 @@
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pth
+*.exe
+*.ipynb
+main.py
+core.py
+Dockerfile
+render.yaml
+requirements.txt
+requirements-web.txt
+requirements-backend.txt
+web/server.py
+web/static/*.py
+api

@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: chess-vision-backend
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: STOCKFISH_FILE
+        value: /usr/games/stockfish

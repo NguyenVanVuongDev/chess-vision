@@ -84,6 +84,10 @@ function stopSharing() {
 
 async function captureAndAnalyze() {
   if (!stream || videoElement.readyState < 2) return;
+  if (!API_BASE) {
+    setMessage("Chưa cấu hình backend AI trong static/config.js.", "error");
+    return;
+  }
   scanButton.disabled = true;
   setStatus("Đang phân tích", true);
 
@@ -150,6 +154,10 @@ function toggleAutoScan() {
 }
 
 async function analyzeCurrentPosition() {
+  if (!API_BASE) {
+    setMessage("Chưa cấu hình backend AI trong static/config.js.", "error");
+    return;
+  }
   try {
     const response = await fetch(`${API_BASE}/api/analyze-fen`, {
       method: "POST",

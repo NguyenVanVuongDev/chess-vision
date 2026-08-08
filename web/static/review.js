@@ -42,6 +42,11 @@ function setStatus(text, active = false) {
 }
 
 async function analyzeGame() {
+  const apiBase = (window.CHESS_VISION_API_BASE || "").replace(/\/$/, "");
+  if (!apiBase) {
+    setMessage("Chưa cấu hình backend AI trong static/config.js.", "error");
+    return;
+  }
   const pgn = pgnInput.value.trim();
   if (!pgn) {
     setMessage("Hãy dán PGN của ván đấu trước.", "error");
@@ -52,7 +57,7 @@ async function analyzeGame() {
   setMessage("Đang chạy Stockfish qua từng nước, vui lòng đợi...");
 
   try {
-    const response = await fetch(`${(window.CHESS_VISION_API_BASE || "").replace(/\/$/, "")}/api/analyze-game`, {
+    const response = await fetch(`${apiBase}/api/analyze-game`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ pgn }),

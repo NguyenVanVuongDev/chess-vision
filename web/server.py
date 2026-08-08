@@ -24,8 +24,8 @@ from game_review import analyze_game as run_game_review
 from game_review import extract_san_moves
 from openings_data import OPENINGS
 
-MODEL_FILE = ROOT_DIR / "chess_model_best.pth"
-STOCKFISH_FILE = ROOT_DIR / "stockfish.exe"
+MODEL_FILE = Path(os.getenv("MODEL_FILE", ROOT_DIR / "chess_model_best.pth"))
+STOCKFISH_FILE = Path(os.getenv("STOCKFISH_FILE", ROOT_DIR / "stockfish.exe"))
 
 app = FastAPI(title="Chess Vision Web")
 app.add_middleware(

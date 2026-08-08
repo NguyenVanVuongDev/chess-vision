@@ -47,8 +47,12 @@ function sleep(ms) {
 }
 
 async function loadOpenings() {
+  const apiBase = (window.CHESS_VISION_API_BASE || "").replace(/\/$/, "");
+  if (!apiBase) {
+    setMessage("Chưa cấu hình backend AI trong static/config.js.", "error");
+    return;
+  }
   try {
-    const apiBase = (window.CHESS_VISION_API_BASE || "").replace(/\/$/, "");
     const response = await fetch(`${apiBase}/api/openings`);
     const result = await response.json();
     if (!result.success) throw new Error("Không tải được danh sách khai cuộc");
@@ -112,6 +116,7 @@ function updateBookLine() {
 
 async function fetchEval(fen) {
   const apiBase = (window.CHESS_VISION_API_BASE || "").replace(/\/$/, "");
+  if (!apiBase) throw new Error("Chưa cấu hình backend AI trong static/config.js.");
   const response = await fetch(`${apiBase}/api/analyze-fen`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

@@ -1,0 +1,8 @@
+.git
+__pycache__
+*.ipynb
+main.py
+stockfish.exe
+requirements.txt
+requirements-web.txt
+web/static/*.pyc
