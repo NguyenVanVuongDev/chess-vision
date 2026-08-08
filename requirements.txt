@@ -1,0 +1,10 @@
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+python-chess>=1.999
+stockfish>=3.28.0
+numpy
+opencv-python-headless
+Pillow
+torch
+torchvision
