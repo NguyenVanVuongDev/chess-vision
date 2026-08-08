@@ -1,47 +1,63 @@
 # Chess Vision Web
 
-## Deploy Vercel
+## Mo hinh mien phi
 
-Vercel chi phuc vu giao dien tinh. Backend FastAPI can chay tren Render, Railway
-hoac mot may chu Python khac vi PyTorch va Stockfish vuot gioi han Serverless
-Function cua Vercel.
+- Render phuc vu ca giao dien web va backend AI.
+- FastAPI, PyTorch, OpenCV va Stockfish chay tren Render.
+- Khong can Vercel, domain rieng hoac Cloudflare Tunnel.
 
-Sau khi co URL backend, thay gia tri `window.CHESS_VISION_API_BASE` trong
-`web/static/index.html`, `opening.html` va `review.html` bang URL do, vi du:
+Model khong chay tren Vercel vi PyTorch vuot gioi han Serverless Function. Khong can chuyen sang C++.
 
-```html
-<script>window.CHESS_VISION_API_BASE = "https://your-backend.example.com";</script>
-```
+URL hien tai: `https://chess-vision-wthy.onrender.com`.
 
-Ban web thay cho giao dien Tkinter. Trinh duyet se chia se cua so/man hinh bang `getDisplayMedia()`, sau do gui frame ve FastAPI de OpenCV va PyTorch nhan dien ban co.
-
-## Cai dat
+## 1. Cai Python va dependencies
 
 Mo PowerShell tai thu muc `chess-vision`:
 
 ```powershell
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements-web.txt
-```
-
-Neu PowerShell chan kich hoat moi truong ao, co the chay truc tiep:
-
-```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements-web.txt
 ```
 
-## Chay
+Neu PowerShell chan script, dung lenh truc tiep voi `.venv\Scripts\python.exe` nhu tren, khong can activate moi truong.
+
+## 2. Chay backend local
+
+Mo PowerShell thu nhat:
 
 ```powershell
-.\.venv\Scripts\python.exe -m uvicorn web.server:app --reload
+.\start-backend.ps1
 ```
 
-Mo `http://127.0.0.1:8000` tren trinh duyet, bam **Chia se man hinh**, roi chon cua so dang mo ban co.
+Kiem tra bang trinh duyet: `http://127.0.0.1:8000/api/health`.
+Can thay `model_loaded: true` va `stockfish_available: true`.
+
+## 3. Deploy Render
+
+Tao **Web Service** tu repository GitHub, chon runtime **Docker**, Dockerfile
+`Dockerfile`, context `.`, va health check `/api/health`. Render se cap URL:
+`https://chess-vision-wthy.onrender.com`.
+
+Frontend da duoc cau hinh trong [static/config.js](static/config.js) de goi
+thang URL Render, khong can Vercel, domain rieng hay Cloudflare Tunnel.
+
+Push len GitHub:
+
+```powershell
+git add .
+git commit -m "Use Render for web and AI backend"
+git push
+```
+
+Render tu deploy lai. Mo URL Render, bam **Chia se man hinh** va chon cua so co ban co.
+
+## Moi lan su dung
+
+1. Khong can bat may local.
+2. Render Free co the sleep khi khong co request; request dau tien sau do co the cham.
+3. Kiem tra `https://chess-vision-wthy.onrender.com/api/health`.
 
 ## Luu y
 
-- `chess_model_best.pth` va `stockfish.exe` phai nam o thu muc goc `chess-vision`.
-- Trinh duyet chi cho phep chia se man hinh tren `localhost`/`127.0.0.1` hoac HTTPS.
-- Neu nhan dien khong tim thay ban co, hay chon chia se cua so ban co thay vi chia se mot tab khong chua ban co.
-- File `main.py` cu van duoc giu lai; ban web chay doc lap qua `web.server:app`.
+Render Free khong bao dam uptime va co the mat 30-60 giay de wake up. Neu
+nhieu nguoi cung quet, PyTorch va Stockfish co the cham hoac het RAM.
